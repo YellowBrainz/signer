@@ -7,4 +7,4 @@ make build key export
 make build import
 
 ## Signing
-MESSAGE=xxxx make signature
+make signature MESSAGE="HELLOWORLD"
