@@ -9,13 +9,13 @@ All commands are wrapped in a Makefile. You require the following:
 * GNU Make 3.81 or better
 
 ## Build your key
-make build key export PASSWD="<YourPasswd>"
+make -s build key export PASSWD="<YourPasswd>"
 
 ## Start with existing key
-make build import
+make -s build import
 
 ## Signing
-make signature MESSAGE="HELLOWORLD" PASSWD="<YourPasswd>"
+make -s signature MESSAGE="HELLOWORLD" PASSWD="<YourPasswd>"
 
 ## Verify
-make verify MESSAGE="HELLOWORLD" SIGNATURE="<SignatureOf-HELLOWORLD>"
+make -s verify MESSAGE="HELLOWORLD" SIGNATURE="<SignatureOf-HELLOWORLD>"
