@@ -16,3 +16,6 @@ make build import
 
 ## Signing
 make signature MESSAGE="HELLOWORLD" PASSWD="<YourPasswd>"
+
+## Verify
+make verify MESSAGE="HELLOWORLD" SIGNATURE="<SignatureOf-HELLOWORLD>"
