@@ -12,6 +12,7 @@ Signing binary files requires keccak-256sum to be installed. Please build and
 install the following packages from source:
 
 [libkeccak](git@github.com:maandree/libkeccak.git)
+
 [sha3sum](git@github.com:maandree/sha3sum.git)
 
 ## Build your key
