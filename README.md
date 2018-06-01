@@ -11,9 +11,8 @@ All commands are wrapped in a Makefile. You require the following:
 Signing binary files requires keccak-256sum to be installed. Please build and
 install the following packages from source:
 
-[git@github.com:maandree/libkeccak.git](git@github.com:maandree/libkeccak.git)
-
-[git@github.com:maandree/sha3sum.git](git@github.com:maandree/sha3sum.git)
+* [https://github.com/maandree/libkeccak](https://github.com/maandree/libkeccak)
+* [https://github.com/maandree/sha3sum](https://github.com/maandree/sha3sum)
 
 ## Build your key
 make -s build key export PASSWD="**< YourPasswd >**"
