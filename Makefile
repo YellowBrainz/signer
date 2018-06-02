@@ -6,11 +6,11 @@ lib:
 
 
 proof:
-	docker run -v `pwd`:/opt yellowbrainz/signer:latest *
+	docker run -v `pwd`:/opt yellowbrainz/signer:latest *|cut -c 1-64
 
 hash:
-	docker cp $(PATH)$(FILE) $(NAME):/opt
-	docker run -v `pwd`:/opt yellowbrainz/signer:latest /opt/$(FILE) |cut -c 1-64
+	docker cp $(FILEDIR)$(FILE) $(NAME):/opt
+	docker run --name $(NAME) -v `pwd`:/opt yellowbrainz/signer:latest /opt/$(FILE) |cut -c 1-64
 
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
