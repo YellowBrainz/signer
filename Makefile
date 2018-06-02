@@ -23,10 +23,11 @@ signature:
 	@docker rm $(NAME) >/dev/null
 
 verify:
-	docker start $(NAME) >/dev/null
-	sleep 5
-	docker exec $(NAME) geth attach --exec "eth.accounts[0] == personal.ecRecover(web3.toHex('$(MESSAGE)'),'$(SIGNATURE)');"
-	docker stop $(NAME) >/dev/null
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@docker exec $(NAME) geth attach --exec "eth.accounts[0] == personal.ecRecover(web3.toHex('$(MESSAGE)'),'$(SIGNATURE)');"
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
 
 signbin:
 	docker start $(NAME) >/dev/null
