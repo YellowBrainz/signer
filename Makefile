@@ -1,4 +1,5 @@
 NAME=ethsign
+GETHVERSION=v1.8.10
 
 lib:
 	docker build -t yellowbrainz/signer:latest .
@@ -14,7 +15,7 @@ key:
 	@mkdir -p keystore
 	@# check if file exists?
 	@echo "$(PASSWD)" > ./keystore/pw
-	docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:v1.8.10 --password /root/.ethereum/keystore/pw account new
+	docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
 	docker rm $(NAME)
 
 import:
