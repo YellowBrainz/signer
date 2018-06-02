@@ -12,8 +12,10 @@ key:
 	@mkdir -p keystore
 	@# check if file exists?
 	@echo "$(PASSWD)" > ./keystore/pw
-	docker run --name ethkeygen -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
-	docker rm ethkeygen
+<<<<<<< HEAD
+	docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
+	docker rm $(NAME)
+>>>>>>> 10e680b5894fa27adc66c2be8fd48b4e5da52a3e
 
 import:
 	docker cp keystore/* $(NAME):/root/.ethereum/keystore/
