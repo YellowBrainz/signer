@@ -86,3 +86,7 @@ make signbin FILENAME="<FullPathAndFilename>" PASSWD="<YourPasswd>"
 ```
 make verifybin FILENAME="<FullPathAndFilename>" SIGNATURE="<SignatureOf-BinaryFile>"
 ```
+
+## Credits
+
+Credits to my fellow CodeZombie Max Belooussov to help me optimize the docker implementation. Also like to thank Mattias Andrée for the sha3 function that we are using in this project.
