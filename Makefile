@@ -7,13 +7,12 @@ build:
 	docker stop $(NAME) >/dev/null
 
 key:
-	docker start $(NAME) >/dev/null
-	echo "$(PASSWD)" > pw
-	docker cp pw $(NAME):/ >/dev/null
-	docker exec $(NAME) geth --password pw account new >/dev/null
-	docker exec $(NAME) rm pw >/dev/null
-	rm pw >/dev/null
-	docker stop $(NAME) >/dev/null
+	@# check if subdir exists?
+	@mkdir -p keystore
+	@# check if file exists?
+	@echo "$(PASSWD)" > ./keystore/pw
+	docker run --name ethkeygen -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:v1.8.10 --password /root/.ethereum/keystore/pw account new
+	docker rm ethkeygen
 
 import:
 	docker cp keystore/* $(NAME):/root/.ethereum/keystore/

@@ -1,6 +1,6 @@
 # Off-chain signing using Ethereum keys
 
-This little utility help you make build a Ethereum based key-pair.  With this
+This little utility help you make build an Ethereum based key-pair  With this
 key you can sign messages that people can verify by just using your public key.
 
 All commands are wrapped in a Makefile. You require the following:
