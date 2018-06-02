@@ -15,10 +15,11 @@ key:
 	@docker rm $(NAME) >/dev/null
 
 signature:
-	docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
-	sleep 5
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
 	@docker exec $(NAME) geth attach --exec "personal.sign(web3.toHex('$(MESSAGE)'),eth.accounts[0],'$(PASSWD)');"
-	docker stop $(NAME) >/dev/null
+	@docker stop $(NAME)
+	@docker rm $(NAME)
 
 
 verify:
