@@ -6,7 +6,7 @@ lib:
 
 
 proof:
-	docker run -v `pwd`:/root yellowbrainz/signer:latest /root/Dockerfile
+	docker run -v `pwd`:/root yellowbrainz/signer:latest /root/Dockerfile |cut -c 1-64
 
 build:
 	- docker rm -f $(NAME) >/dev/null
