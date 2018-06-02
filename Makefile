@@ -6,7 +6,8 @@ lib:
 
 
 proof:
-	docker run -v `pwd`:/opt yellowbrainz/signer:latest /opt/Dockerfile |cut -c 1-64
+	#docker run -v `pwd`:/opt yellowbrainz/signer:latest /opt/Dockerfile |cut -c 1-64
+	docker run -v `pwd`:/opt yellowbrainz/signer:latest *
 
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
