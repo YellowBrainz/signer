@@ -4,6 +4,10 @@ GETHVERSION=v1.8.10
 lib:
 	docker build -t yellowbrainz/signer:latest .
 
+
+proof:
+	docker run -v `pwd`:/root yellowbrainz/signer:latest /root/Dockerfile
+
 build:
 	- docker rm -f $(NAME) >/dev/null
 	docker run -d --name $(NAME) ethereum/client-go --maxpeers 0 >/dev/null
