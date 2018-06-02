@@ -5,6 +5,8 @@ private key you can sign messages that people can verify by just using your
 public key, and the message.
 
 In this folder you find the following files:
+
+```
 +
 |-- Dockerfile
 |-- docs
@@ -15,6 +17,7 @@ In this folder you find the following files:
 |-- Makefile
 |-- README.md
 +-- TT.txt
+```
 
 Never mind the TT.txt file. this is just a temp file where the hash value is
 kept.
@@ -55,16 +58,31 @@ make lib
 ```
 
 ## Build your key
-make key PASSWD="**< YourPasswd >**"
+
+```
+make key PASSWD="<YourPasswd>"
+```
 
 ## Signing
-make signature MESSAGE="HELLOWORLD" PASSWD="**< YourPasswd >**"
+
+```
+make signature MESSAGE="HELLOWORLD" PASSWD="<YourPasswd>"
+```
 
 ## Verify
-make verify MESSAGE="HELLOWORLD" SIGNATURE="**< SignatureOf-HELLOWORLD >**"
+
+```
+make verify MESSAGE="HELLOWORLD" SIGNATURE="<SignatureOf-HELLOWORLD>"
+```
 
 ## Signing a binary file
-make signbin FILENAME="**< FullPathAndFilename >**" PASSWD="**< YourPasswd >**"
+
+```
+make signbin FILENAME="<FullPathAndFilename>" PASSWD="<YourPasswd>"
+```
 
 ## Verifying a binary file
-make verifybin FILENAME="**< FullPathAndFilename >**" SIGNATURE="**< SignatureOf-BinaryFile >**"
+
+```
+make verifybin FILENAME="<FullPathAndFilename>" SIGNATURE="<SignatureOf-BinaryFile>"
+```
