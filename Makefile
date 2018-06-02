@@ -5,11 +5,8 @@ lib:
 	docker build -t yellowbrainz/signer:latest .
 
 
-proof:
-	docker run -v `pwd`/docs:/opt yellowbrainz/signer:latest /opt/$(FILENAME) | cut -c 1-64
-
 hash:
-	docker run -v $(FILEPATH):/opt yellowbrainz/signer:latest /opt/$(FILENAME) |cut -c 1-64
+	docker run -v `pwd`/docs:/opt yellowbrainz/signer:latest /opt/$(FILENAME) | cut -c 1-64
 
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
