@@ -5,7 +5,7 @@ lib:
 	docker build -t yellowbrainz/signer:latest .
 
 
-proof:
+hash:
 	docker run -v `pwd`:/opt yellowbrainz/signer:latest /opt/Dockerfile |cut -c 1-64
 
 key:
