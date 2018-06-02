@@ -1,18 +1,15 @@
 FROM alpine:latest
 
-RUN apk update
-RUN apk add make
-RUN apk add gcc
-RUN apk add git
-RUN apk add linux-headers ca-certificates musl-dev
-# gcc git
-RUN git clone --depth 1 https://github.com/maandree/libkeccak
-WORKDIR libkeccak
-RUN make
-RUN make install
-WORKDIR /
-RUN git clone --depth 1 https://github.com/maandree/sha3sum
-WORKDIR sha3sum
-RUN make
-RUN make install
-ENTRYPOINT keccak-256sum
+RUN \
+ apk add --update git make gcc musl-dev linux-headers ca-certificates && \
+  git clone --depth 1 https://github.com/maandree/libkeccak && \
+  (cd libkeccak && make && make install) && \
+  rm -rf libkeccak && \
+  git clone --depth 1 https://github.com/maandree/sha3sum && \
+  (cd sha3sum && make && make install) && \
+  rm -rf sha3sum && \
+  apk del git make gcc musl-dev linux-headers && \
+  rm -rf /var/cache/apk/*
+
+ENTRYPOINT ["/usr/local/bin/keccak-256sum"]
+CMD ["--help"]
