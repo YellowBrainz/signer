@@ -6,7 +6,7 @@ lib:
 
 
 proof:
-	docker run -v `pwd`:/opt yellowbrainz/signer:latest *|cut -c 1-64
+	docker run -v `pwd`/docs:/opt yellowbrainz/signer:latest *|cut -c 1-64
 
 hash:
 	docker run -v $(FILEPATH):/opt yellowbrainz/signer:latest /opt/$(FILENAME) |cut -c 1-64
