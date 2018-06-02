@@ -9,7 +9,8 @@ proof:
 	docker run -v `pwd`:/opt yellowbrainz/signer:latest *
 
 hash:
-	docker run -v `pwd`:/opt yellowbrainz/signer:latest /opt/Dockerfile |cut -c 1-64
+	docker cp $(PATH)$(FILE) $(NAME):/opt
+	docker run -v `pwd`:/opt yellowbrainz/signer:latest /opt/$(FILE) |cut -c 1-64
 
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
