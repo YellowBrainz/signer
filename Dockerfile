@@ -11,5 +11,7 @@ RUN \
   apk del git make gcc musl-dev linux-headers && \
   rm -rf /var/cache/apk/*
 
+WORKDIR /opt
+VOLUME /opt
 ENTRYPOINT ["/usr/local/bin/keccak-256sum"]
 CMD ["--help"]
