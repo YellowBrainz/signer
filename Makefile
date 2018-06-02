@@ -4,7 +4,6 @@ GETHVERSION=v1.8.10
 lib:
 	docker build -t yellowbrainz/signer:latest .
 
-
 hash:
 	docker run -v `pwd`/docs:/opt yellowbrainz/signer:latest /opt/$(FILENAME) | cut -c 1-64
 
