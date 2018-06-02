@@ -1,4 +1,5 @@
 NAME=ethsign
+GETHVERSION=v1.8.10
 
 build:
 	- docker rm -f $(NAME) >/dev/null
@@ -11,7 +12,7 @@ key:
 	@mkdir -p keystore
 	@# check if file exists?
 	@echo "$(PASSWD)" > ./keystore/pw
-	docker run --name ethkeygen -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:v1.8.10 --password /root/.ethereum/keystore/pw account new
+	docker run --name ethkeygen -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
 	docker rm ethkeygen
 
 import:
