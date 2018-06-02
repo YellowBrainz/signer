@@ -10,8 +10,8 @@ hash:
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
 	@if [ -e ./keystore/pw ]; then PASSWD= $(cat ./keystore/pw); else echo "$(PASSWD)" > ./keystore/pw; chmod 400 ./keystore/pw; fi
-	docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
-	docker rm $(NAME)
+	@docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
+	@docker rm $(NAME) >/dev/null
 
 signature:
 	docker start $(NAME) >/dev/null
