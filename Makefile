@@ -1,5 +1,6 @@
 NAME=ethsign
 GETHVERSION=v1.8.10
+KEYS=/root/.ethereum/keystore
 
 lib:
 	docker build -t yellowbrainz/signer:latest .
@@ -10,15 +11,15 @@ hash:
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
 	@if [ -e ./keystore/pw ]; then PASSWD= $(cat ./keystore/pw); else echo "$(PASSWD)" > ./keystore/pw; chmod 400 ./keystore/pw; fi
-	@docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
+	@docker run --name $(NAME) -ti --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) --password $(KEYS)/pw account new
 	@docker rm $(NAME) >/dev/null
 
 signature:
-	docker run -d --name $(NAME) --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:latest
-	sleep 5
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
 	@docker exec $(NAME) geth attach --exec "personal.sign(web3.toHex('$(MESSAGE)'),eth.accounts[0],'$(PASSWD)');"
-	docker stop $(NAME)
-	docker rm $(NAME)
+	@docker stop $(NAME)
+	@docker rm $(NAME)
 
 
 verify:
