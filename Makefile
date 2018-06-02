@@ -20,10 +20,11 @@ export:
 	docker cp $(NAME):/root/.ethereum/keystore .
 
 signature:
-	docker start $(NAME) >/dev/null
+	docker run -d --name $(NAME) --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:latest >/dev/null
 	sleep 5
-	docker exec  $(NAME) geth attach --exec "personal.sign(web3.toHex('$(MESSAGE)'),eth.accounts[0],'$(PASSWD)');"
+	@docker exec $(NAME) geth attach --exec "personal.sign(web3.toHex('$(MESSAGE)'),eth.accounts[0],'$(PASSWD)');"
 	docker stop $(NAME) >/dev/null
+
 
 verify:
 	docker start $(NAME) >/dev/null
