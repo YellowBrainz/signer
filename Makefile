@@ -1,24 +1,61 @@
-NAME=etcsign
+NAME=ethsign
+GETHVERSION=v1.8.10
+KEYS=/root/.ethereum/keystore
 
-build:
-	- docker rm -f $(NAME)
-	docker run -d --name $(NAME) ethereum/client-go --maxpeers 0
-	sleep 5
-	docker stop $(NAME)
+lib:
+	docker build -t yellowbrainz/signer:latest .
+
+hash:
+	@docker run --name $(NAME) --volume `pwd`/docs:/opt yellowbrainz/signer:latest /opt/$(FILENAME) | cut -c 1-64 > TT.txt
+	@cat TT.txt
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
 
 key:
-	docker start $(NAME)
-	docker exec $(NAME) touch pw
-	docker exec $(NAME) geth --password pw account new
-	docker stop $(NAME)
-
-import:
-	docker cp keystore/* $(NAME):/root/.ethereum/keystore/
-
-export:
-	docker cp $(NAME):/root/.ethereum/keystore .
+	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
+	@if [ -e ./keystore/pw ]; then PASSWD= $(cat ./keystore/pw); else echo "$(PASSWD)" > ./keystore/pw; fi
+	@chmod u=rw ./keystore/pw
+	@docker run --name $(NAME) -ti --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) --password $(KEYS)/pw account new
+	@docker rm $(NAME) >/dev/null
 
 signature:
-	docker start $(NAME)
-	docker exec  $(NAME) geth attach --exec "personal.unlockAccount(eth.accounts[0],''); web3.eth.sign(eth.accounts[0], web3.toHex('#' + '$(MESSAGE)').replace('0x23','0x'));"
-	docker stop $(NAME)
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@docker exec $(NAME) geth attach --exec "personal.sign(web3.toHex('$(MESSAGE)'),eth.accounts[0],'$(PASSWD)');"
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
+
+verify:
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@docker exec $(NAME) geth attach --exec "eth.accounts[0] == personal.ecRecover(web3.toHex('$(MESSAGE)'),'$(SIGNATURE)');"
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
+
+signbin: hash
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
+	@echo '"' >>TTT.txt
+	@cat TTT.txt |tr -d '\n' >TT.js
+	@docker cp TT.js $(NAME):/
+	@docker exec $(NAME) geth attach --exec "loadScript('TT.js');personal.sign(hash,eth.accounts[0],'$(PASSWD)');"
+	@rm TT.js
+	@rm TT.txt
+	@rm TTT.txt
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
+
+verifybin: hash
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@cat TT.txt |sed 's/^/hash\=\"0x/' >VVV.txt
+	@echo '"' >>VVV.txt
+	@cat VVV.txt |tr -d '\n' >VV.js
+	@docker cp VV.js $(NAME):/
+	@docker exec $(NAME) geth attach --exec "loadScript('VV.js');eth.accounts[0] == personal.ecRecover(hash,'$(SIGNATURE)');"
+	@rm VV.js
+	@rm TT.txt
+	@rm VVV.txt
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
