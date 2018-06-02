@@ -8,10 +8,8 @@ build:
 	docker stop $(NAME) >/dev/null
 
 key:
-	@# check if subdir exists?
-	@mkdir -p keystore
-	@# check if file exists?
-	@echo "$(PASSWD)" > ./keystore/pw
+	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
+	@if [ -e ./keystore/pw ]; then PASSWD= $(cat ./keystore/pw); else echo "$(PASSWD)" > ./keystore/pw; fi
 	docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
 	docker rm $(NAME)
 
