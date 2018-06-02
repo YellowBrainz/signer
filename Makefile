@@ -6,7 +6,10 @@ lib:
 	docker build -t yellowbrainz/signer:latest .
 
 hash:
-	docker run -v `pwd`/docs:/opt yellowbrainz/signer:latest /opt/$(FILENAME) | cut -c 1-64
+	@docker run --name $(NAME) --volume `pwd`/docs:/opt yellowbrainz/signer:latest /opt/$(FILENAME) | cut -c 1-64 > TT.txt
+	@cat TT.txt
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
 
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
@@ -29,32 +32,30 @@ verify:
 	@docker stop $(NAME) >/dev/null
 	@docker rm $(NAME) >/dev/null
 
-signbin:
-	docker start $(NAME) >/dev/null
-	sleep 5
-	keccak-256sum $(FILE) |cut -c 1-64 >TT.txt
-	cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
-	echo '"' >>TTT.txt
-	cat TTT.txt |tr -d '\n' >TT.js
-	cat TT.js
-	echo ""
-	docker cp TT.js $(NAME):/
-	docker exec $(NAME) geth attach --exec "loadScript('TT.js');personal.sign(hash,eth.accounts[0],'$(PASSWD)');"
-	rm TT.js
-	rm TT.txt
-	rm TTT.txt
-	docker stop $(NAME) >/dev/null
+signbin: hash
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
+	@echo '"' >>TTT.txt
+	@cat TTT.txt |tr -d '\n' >TT.js
+	@docker cp TT.js $(NAME):/
+	@docker exec $(NAME) geth attach --exec "loadScript('TT.js');personal.sign(hash,eth.accounts[0],'$(PASSWD)');"
+	@rm TT.js
+	@rm TT.txt
+	@rm TTT.txt
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
 
-verifybin:
-	docker start $(NAME) >/dev/null
-	sleep 5
-	keccak-256sum $(FILE) |cut -c 1-64 >VV.txt
-	cat VV.txt |sed 's/^/hash\=\"0x/' >VVV.txt
-	echo '"' >>VVV.txt
-	cat VVV.txt |tr -d '\n' >VV.js
-	docker cp VV.js $(NAME):/
-	docker exec $(NAME) geth attach --exec "loadScript('VV.js');eth.accounts[0] == personal.ecRecover(hash,'$(SIGNATURE)');"
-	rm VV.js
-	rm VV.txt
-	rm VVV.txt
-	docker stop $(NAME) >/dev/null
+verifybin: hash
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@cat TT.txt |sed 's/^/hash\=\"0x/' >VVV.txt
+	@echo '"' >>VVV.txt
+	@cat VVV.txt |tr -d '\n' >VV.js
+	@docker cp VV.js $(NAME):/
+	@docker exec $(NAME) geth attach --exec "loadScript('VV.js');eth.accounts[0] == personal.ecRecover(hash,'$(SIGNATURE)');"
+	@rm VV.js
+	@rm TT.txt
+	@rm VVV.txt
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
