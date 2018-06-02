@@ -13,12 +13,6 @@ key:
 	docker run --name $(NAME) -ti --volume `pwd`/keystore:/root/.ethereum/keystore ethereum/client-go:$(GETHVERSION) --password /root/.ethereum/keystore/pw account new
 	docker rm $(NAME)
 
-import:
-	docker cp keystore/* $(NAME):/root/.ethereum/keystore/
-
-export:
-	docker cp $(NAME):/root/.ethereum/keystore .
-
 signature:
 	docker start $(NAME) >/dev/null
 	sleep 5
