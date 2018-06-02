@@ -40,6 +40,8 @@ signbin:
 	cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
 	echo '"' >>TTT.txt
 	cat TTT.txt |tr -d '\n' >TT.js
+	cat TT.js
+	echo ""
 	docker cp TT.js $(NAME):/
 	docker exec $(NAME) geth attach --exec "loadScript('TT.js');personal.sign(hash,eth.accounts[0],'$(PASSWD)');"
 	rm TT.js
