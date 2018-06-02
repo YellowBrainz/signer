@@ -8,12 +8,6 @@ lib:
 proof:
 	docker run -v `pwd`:/opt yellowbrainz/signer:latest /opt/Dockerfile |cut -c 1-64
 
-build:
-	- docker rm -f $(NAME) >/dev/null
-	docker run -d --name $(NAME) ethereum/client-go --maxpeers 0 >/dev/null
-	sleep 5
-	docker stop $(NAME) >/dev/null
-
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
 	@if [ -e ./keystore/pw ]; then PASSWD= $(cat ./keystore/pw); else echo "$(PASSWD)" > ./keystore/pw; chmod 400 ./keystore/pw; fi
