@@ -14,7 +14,7 @@ hash:
 key:
 	@if [ ! -d ./keystore ]; then mkdir -p keystore; else rm -f ./keystore/UTC*; fi
 	@if [ -e ./keystore/pw ]; then PASSWD= $(cat ./keystore/pw); else echo "$(PASSWD)" > ./keystore/pw; fi
-	@chmod u=rw ./keystore/pw
+	@chmod 400 ./keystore/pw
 	@docker run --name $(NAME) -ti --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) --password $(KEYS)/pw account new
 	@docker rm $(NAME) >/dev/null
 
