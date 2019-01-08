@@ -32,6 +32,12 @@ verify:
 	@docker stop $(NAME) >/dev/null
 	@docker rm $(NAME) >/dev/null
 
+sha3: hash
+	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
+	@sleep 5
+	@cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
+	@echo '"' >>TTT.txt
+
 signbin: hash
 	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
 	@sleep 5
