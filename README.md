@@ -75,6 +75,12 @@ make signature MESSAGE="HELLOWORLD" PASSWD="<YourPasswd>"
 make verify MESSAGE="HELLOWORLD" SIGNATURE="<SignatureOf-HELLOWORLD>"
 ```
 
+## Create hash from binary
+
+```
+make sha3 FILENAME="<FullPathAndFilename>"
+```
+
 ## Signing a binary file
 
 ```

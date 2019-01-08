@@ -37,6 +37,10 @@ sha3: hash
 	@sleep 5
 	@cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
 	@echo '"' >>TTT.txt
+	@rm TT.txt
+	@rm TTT.txt
+	@docker stop $(NAME) >/dev/null
+	@docker rm $(NAME) >/dev/null
 
 signbin: hash
 	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
