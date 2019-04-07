@@ -36,7 +36,7 @@ verify:
 sha3: hash
 	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
 	@sleep 5
-	@cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
+	@cat TT.txt |sed 's/^/hash\=\"/' >TTT.txt
 	@echo '"' >>TTT.txt
 	@rm TT.txt
 	@rm TTT.txt
@@ -46,11 +46,11 @@ sha3: hash
 signbin: hash
 	@docker run -d --name $(NAME) --volume `pwd`/keystore:$(KEYS) ethereum/client-go:$(GETHVERSION) >/dev/null
 	@sleep 5
-	@cat TT.txt |sed 's/^/hash\=\"0x/' >TTT.txt
+	@cat TT.txt |sed 's/^/hash\=\"/' >TTT.txt
 	@echo '"' >>TTT.txt
 	@cat TTT.txt |tr -d '\n' >TT.js
 	@docker cp TT.js $(NAME):/
-	@docker exec $(NAME) geth attach --exec "loadScript('TT.js');personal.sign(hash,eth.accounts[0],'$(PASSWD)');"
+	@docker exec $(NAME) geth attach --exec "loadScript('TT.js');personal.sign(hash,eth.accounts[0],'$(PASSWD)');" |sed 's/\"//g'
 	@rm TT.js
 	@rm TT.txt
 	@rm TTT.txt
