@@ -7,6 +7,7 @@ lib:
 
 hash:
 	@docker run --name $(NAME) --volume `pwd`/docs:/opt yellowbrainz/signer:latest /opt/$(FILENAME) | cut -c 1-64 > TT.txt
+	@echo "0x`cat TT.txt`" > TT.txt
 	@cat TT.txt
 	@docker stop $(NAME) >/dev/null
 	@docker rm $(NAME) >/dev/null
